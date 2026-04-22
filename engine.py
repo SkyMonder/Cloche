@@ -6,11 +6,16 @@ engine = None
 
 def init_engine():
     global engine
-    engine = chess.engine.SimpleEngine.popen_uci("./clover_engine")
+    # Пытаемся найти бинарник: сначала clover_engine, затем clover
+    binary = "./clover_engine"
+    if not os.path.exists(binary):
+        binary = "./clover"
+    engine = chess.engine.SimpleEngine.popen_uci(binary)
     engine.configure({
         "Skill Level": 20,
         "Hash": 64,
         "Threads": 1,
+        "Move Overhead": 50,
     })
 
 @app.on_event("startup")
