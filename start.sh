@@ -1,18 +1,24 @@
 #!/bin/bash
 set -e
 
-echo "=== Установка Reckless 0.9.0 ==="
-mkdir -p temp
-cd temp
+echo "=== Установка инструментов для компиляции Rust ==="
+# Устанавливаем Rust, используя официальный скрипт (выбираем '1' для стандартной установки)
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+source "$HOME/.cargo/env"
 
-# Скачивание и распаковка (версия для AVX2)
-wget -q https://github.com/codedeliveryservice/Reckless/releases/download/v0.9.0/Reckless-v0.9.0-avx2.zip
-unzip -q Reckless-v0.9.0-avx2.zip
+echo "=== Клонирование и компиляция Reckless ==="
+git clone https://github.com/codedeliveryservice/Reckless.git
+cd Reckless
 
-# Перемещение бинарника в корневую директорию
-cp Reckless-v0.9.0-avx2/reckless-avx2 ../engine
+# Компилируем в релизном режиме для максимальной производительности
+# Это займет некоторое время, но делается один раз при сборке
+cargo build --release
+
+# Копируем готовый бинарник в корневую папку
+cp target/release/reckless ../engine
+
 cd ..
-rm -rf temp
+rm -rf Reckless
 chmod +x ./engine
 
 exec gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT engine:app
