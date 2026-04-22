@@ -1,20 +1,20 @@
 #!/bin/bash
 set -e
 
-echo "=== Установка Combusken ==="
+echo "=== Установка Defenchess 2.3 ==="
 mkdir -p temp
 cd temp
 
-# Скачиваем последнюю стабильную версию Combusken для Linux
-wget -q https://github.com/mhib/combusken/releases/download/v1.3.0/combusken-1.3.0-linux-amd64.zip
-unzip -q combusken-1.3.0-linux-amd64.zip
+# Скачивание бинарника Defenchess для Linux с проверенного источника
+wget -q https://github.com/cetincan0/Defenchess/releases/download/2.3/defenchess-2.3-linux.zip
+unzip -q defenchess-2.3-linux.zip
 
-# Копируем бинарный файл в корневую директорию
-cp combusken-1.3.0-linux-amd64/combusken ../engine
+# Копирование бинарного файла в корневую директорию
+cp defenchess-2.3-linux/defenchess ../engine
 
 cd ..
 rm -rf temp
 chmod +x ./engine
 
-# Запускаем веб-сервер для связи с Lichess
+# Запуск веб-сервера для связи с Lichess
 exec gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT engine:app
