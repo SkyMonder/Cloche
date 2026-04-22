@@ -6,7 +6,7 @@ engine = None
 
 def init_engine():
     global engine
-    engine = chess.engine.SimpleEngine.popen_uci("./engine")
+    engine = chess.engine.SimpleEngine.popen_uci("./clover_engine")
     engine.configure({
         "Skill Level": 20,
         "Hash": 32,
