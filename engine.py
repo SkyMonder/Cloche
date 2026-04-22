@@ -10,7 +10,7 @@ def init_engine():
     # Стандартные настройки UCI, которые поддерживают все движки
     engine.configure({
         "Skill Level": 20,
-        "Hash": 128,
+        "Hash": 256,
         "Threads": 1,
         "Move Overhead": 50,
     })
