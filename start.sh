@@ -1,20 +1,13 @@
 #!/bin/bash
 set -e
 
-echo "=== Установка Defenchess 2.3 ==="
-mkdir -p temp
-cd temp
+echo "=== Установка Ethereal ==="
+# Устанавливаем движок из официального репозитория Ubuntu.
+apt-get update && apt-get install -y ethereal-chess
 
-# Скачивание бинарника Defenchess для Linux с проверенного источника
-wget -q https://github.com/cetincan0/Defenchess/releases/download/2.3/defenchess-2.3-linux.zip
-unzip -q defenchess-2.3-linux.zip
-
-# Копирование бинарного файла в корневую директорию
-cp defenchess-2.3-linux/defenchess ../engine
-
-cd ..
-rm -rf temp
+# Копируем бинарный файл в корневую директорию.
+cp /usr/games/ethereal ./engine
 chmod +x ./engine
 
-# Запуск веб-сервера для связи с Lichess
+echo "=== Запуск Ethereal ==="
 exec gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT engine:app
