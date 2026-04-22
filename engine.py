@@ -9,7 +9,7 @@ def init_engine():
     engine = chess.engine.SimpleEngine.popen_uci("./clover_engine")
     engine.configure({
         "Skill Level": 20,
-        "Hash": 32,
+        "Hash": 64,
         "Threads": 1,
     })
 
