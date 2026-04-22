@@ -1,4 +1,4 @@
-import os, chess, chess.engine, traceback
+import os, chess, chess.engine
 from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
@@ -9,9 +9,8 @@ def init_engine():
     engine = chess.engine.SimpleEngine.popen_uci("./engine")
     engine.configure({
         "Skill Level": 20,
-        "Hash": 256,
+        "Hash": 32,
         "Threads": 1,
-        "Contempt": 0,
     })
 
 @app.on_event("startup")
