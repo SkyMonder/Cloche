@@ -7,10 +7,9 @@ engine = None
 def init_engine():
     global engine
     engine = chess.engine.SimpleEngine.popen_uci("./engine")
-    # Только поддерживаемые опции
     engine.configure({
-        "Skill Level": 20,
-        "Hash": 256,           # можно оставить 256 или уменьшить до 128
+        "Skill Level": 19,      # чуть ниже, чтобы играть более осторожно
+        "Hash": 256,
         "Threads": 1,
         "Move Overhead": 50,
     })
