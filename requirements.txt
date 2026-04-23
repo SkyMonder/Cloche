@@ -1,4 +1,4 @@
-python-chess
 fastapi
 uvicorn
 gunicorn
+requests
