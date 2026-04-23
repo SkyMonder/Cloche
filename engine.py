@@ -1,8 +1,23 @@
-import requests, urllib.parse, traceback
+import os, chess, chess.engine
 from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
-HEADERS = {"User-Agent": "SkyBotinok/1.0 (https://lichess.org/@/SkyBotinok)"}
+engine = None
+
+def init_engine():
+    global engine
+    engine = chess.engine.SimpleEngine.popen_uci("./engine")
+    engine.configure({
+        "Skill Level": 20,
+        "Hash": 256,
+        "Threads": 1,
+        "Move Overhead": 50,
+        "Slow Mover": 110,      # тратить чуть больше времени в сложных позициях
+    })
+
+@app.on_event("startup")
+async def startup():
+    init_engine()
 
 @app.get("/health")
 def health():
@@ -12,18 +27,9 @@ def health():
 async def get_move(data: dict):
     try:
         fen = data.get("fen")
-        encoded = urllib.parse.quote(fen)
-        url = f"https://lichess.org/api/cloud-eval?fen={encoded}&multiPv=1"
-        resp = requests.get(url, headers=HEADERS, timeout=2.0)
-        if resp.status_code == 200:
-            result = resp.json()
-            pvs = result.get('pvs')
-            if pvs and len(pvs) > 0:
-                moves = pvs[0].get('moves')
-                if moves:
-                    best_move = moves.split()[0]
-                    return {"move": best_move}
-        raise HTTPException(status_code=500, detail="No move")
+        move_time = data.get("move_time", 1.0)
+        board = chess.Board(fen)
+        result = engine.play(board, chess.engine.Limit(time=move_time))
+        return {"move": result.move.uci() if result.move else None}
     except Exception as e:
-        print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
