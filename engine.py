@@ -9,10 +9,10 @@ def init_engine():
     engine = chess.engine.SimpleEngine.popen_uci("./engine")
     engine.configure({
         "Skill Level": 20,
-        "Hash": 256,
+        "Hash": 128,
         "Threads": 1,
         "Move Overhead": 50,
-        "Slow Mover": 110,      # тратить чуть больше времени в сложных позициях
+        "Slow Mover": 110,
     })
 
 @app.on_event("startup")
